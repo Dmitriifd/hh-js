@@ -295,10 +295,10 @@ const getData = ({ search, id, country, city } = {}) => {
 		url = fetch(`https://polar-meadow-26698.herokuapp.com/api/vacancy?search=${search}`).then((response) => response.json());
 	}
 	if (city) {
-		url = `https://polar-meadow-26698.herokuapp.com/api/vacancy/?city=${city}`;
+		url = `https://polar-meadow-26698.herokuapp.com/api/vacancy?city=${city}`;
 	}
 	if (country) {
-		url = `https://polar-meadow-26698.herokuapp.com/api/vacancy/?country=${country}`;
+		url = `https://polar-meadow-26698.herokuapp.com/api/vacancy?country=${country}`;
 	}
 	return fetch(url).then((response) => response.json());
 };

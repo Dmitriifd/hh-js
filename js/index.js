@@ -292,7 +292,7 @@ const renderCards = (data) => {
 const getData = ({ search, id, country, city } = {}) => {
 	let url = `https://polar-meadow-26698.herokuapp.com/api/vacancy/${id ? id : ''}`;
 	if (search) {
-		url = fetch(`https://polar-meadow-26698.herokuapp.com/api/vacancy?search=${search}`).then((response) => response.json());
+		return fetch(`https://polar-meadow-26698.herokuapp.com/api/vacancy?search=${search}`).then((response) => response.json());
 	}
 	if (city) {
 		url = `https://polar-meadow-26698.herokuapp.com/api/vacancy?city=${city}`;
@@ -335,7 +335,6 @@ const searchHandler = () => {
 
 const init = async () => {
 	data = await getData();
-    console.log(data);
 	const newData = sortData();
 	renderCards(newData);
 	optionHandler();

@@ -1,8 +1,13 @@
 import { declOfNum } from './helpers.js';
 
 let data = [];
+
+
 const orderBy = document.querySelector('#order_by');
 const searchPeriod = document.querySelector('#search_period');
+
+
+
 
 // Выпадающие списки
 
@@ -16,11 +21,11 @@ const optionListPeriod = document.querySelector('.option__list_period');
 const filterData = () => {
 	const date = new Date();
 	date.setDate(date.getDate() - searchPeriod.value);
-
 	return data.filter((item) => new Date(item.date).getTime() > date);
 };
 
 const sortData = () => {
+    
 	switch (orderBy.value) {
 		case 'down':
 			data.sort((a, b) => (a.minCompensation > b.minCompensation ? 1 : -1));
@@ -39,6 +44,8 @@ const sortData = () => {
 	return filterData();
 };
 
+
+
 const optionHandler = () => {
 	optionBtnOrder.addEventListener('click', () => {
 		optionListOrder.classList.toggle('option__list_active');
@@ -48,43 +55,50 @@ const optionHandler = () => {
 	optionBtnPeriod.addEventListener('click', () => {
 		optionListPeriod.classList.toggle('option__list_active');
 		optionListOrder.classList.remove('option__list_active');
-	});
-
-	optionListOrder.addEventListener('click', ({ target }) => {
-		if (target.classList.contains('option__item')) {
-			optionBtnOrder.textContent = target.textContent;
-			orderBy.value = target.dataset.sort;
-			sortData();
-			const newData = sortData();
-			renderCards(newData);
-			optionListOrder.classList.remove('option__list_active');
-			for (const elem of optionListOrder.querySelectorAll('.option__item')) {
-				if (elem === target) {
-					elem.classList.add('option__item_active');
-				} else {
-					elem.classList.remove('option__item_active');
-				}
-			}
-		}
-	});
-
-	optionListPeriod.addEventListener('click', ({ target }) => {
-		if (target.classList.contains('option__item')) {
-			optionBtnPeriod.textContent = target.textContent;
-			searchPeriod.value = target.dataset.date;
-			const tempData = filterData();
-			renderCards(tempData);
-			optionListPeriod.classList.remove('option__list_active');
-			for (const elem of optionListPeriod.querySelectorAll('.option__item')) {
-				if (elem === target) {
-					elem.classList.add('option__item_active');
-				} else {
-					elem.classList.remove('option__item_active');
-				}
-			}
-		}
-	});
+	});	
 };
+
+
+optionListOrder.addEventListener('click', ({ target }) => {
+	if (target.classList.contains('option__item')) {
+		optionBtnOrder.textContent = target.textContent;
+		orderBy.value = target.dataset.sort;
+		sortData();
+
+		const newData = sortData();
+		console.log(filterData());
+		renderCards(newData);
+		optionListOrder.classList.remove('option__list_active');
+		for (const elem of optionListOrder.querySelectorAll('.option__item')) {
+			if (elem === target) {
+				elem.classList.add('option__item_active');
+			} else {
+				elem.classList.remove('option__item_active');
+			}
+		}
+	}
+});
+
+optionListPeriod.addEventListener('click', (e) => {
+	if (e.target.classList.contains('option__item')) {
+		optionBtnPeriod.textContent = e.target.textContent;
+		searchPeriod.value = e.target.dataset.date;
+       
+		console.log('Фильтр');
+		const tempData = filterData();
+        console.log(filterData());
+		renderCards(tempData);
+
+		optionListPeriod.classList.remove('option__list_active');
+		for (const elem of optionListPeriod.querySelectorAll('.option__item')) {
+			if (elem === e.target) {
+				elem.classList.add('option__item_active');
+			} else {
+				elem.classList.remove('option__item_active');
+			}
+		}
+	}
+});
 
 // Выбор города
 
@@ -92,6 +106,7 @@ const topCityBtn = document.querySelector('.top__city');
 const city = document.querySelector('.city');
 const cityClose = document.querySelector('.city__close');
 const cityRegionList = document.querySelector('.city__region-list');
+
 
 const cityHandler = () => {
 	topCityBtn.addEventListener('click', () => {
@@ -102,6 +117,7 @@ const cityHandler = () => {
 		if (target.classList.contains('city__link')) {
 			// target.getAttribute('href').substring(1)
 			const hash = new URL(target.href).hash.substring(1);
+            
 			const option = {
 				[hash]: target.textContent,
 			};
@@ -166,7 +182,7 @@ const createModal = ({
 	skillsTitleElem.textContent = 'Подробнее';
 	const skillsListElem = document.createElement('ul');
 	skillsListElem.classList.add('skills__list');
-
+    
 	for (const skill of skills) {
 		const skillsItemElem = document.createElement('li');
 		skillsItemElem.classList.add('skills__item');
@@ -206,7 +222,7 @@ const modalHandler = () => {
 			const data = await getData({
 				id: e.target.dataset.vacancy,
 			});
-			console.log(data);
+			
 			modal = createModal(data);
 			overlayVacancy.append(modal);
 		}
@@ -274,17 +290,15 @@ const renderCards = (data) => {
 };
 
 const getData = ({ search, id, country, city } = {}) => {
-	let url = `http://localhost:3000/api/vacancy/${id ? id : ''}`;
+	let url = `https://polar-meadow-26698.herokuapp.com/api/vacancy/${id ? id : ''}`;
 	if (search) {
-		url = fetch(`http://localhost:3000/api/vacancy?search=${search}`).then(
-			(response) => response.json()
-		);
+		url = fetch(`https://polar-meadow-26698.herokuapp.com/api/vacancy?search=${search}`).then((response) => response.json());
 	}
 	if (city) {
-		url = `http://localhost:3000/api/vacancy?city=${city}`;
+		url = `https://polar-meadow-26698.herokuapp.com/api/vacancy/?city=${city}`;
 	}
 	if (country) {
-		url = `http://localhost:3000/api/vacancy?city=${country}`;
+		url = `https://polar-meadow-26698.herokuapp.com/api/vacancy/?country=${country}`;
 	}
 	return fetch(url).then((response) => response.json());
 };
@@ -321,9 +335,9 @@ const searchHandler = () => {
 
 const init = async () => {
 	data = await getData();
+    console.log(data);
 	const newData = sortData();
 	renderCards(newData);
-
 	optionHandler();
 	cityHandler();
 	modalHandler();
@@ -331,3 +345,5 @@ const init = async () => {
 };
 
 init();
+
+
